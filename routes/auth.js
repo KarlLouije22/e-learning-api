@@ -5,12 +5,17 @@ const bcrypt = require("bcrypt");
 const router = Router();
 
 router.post("/register", async (req, res) => {
-    let { firstname, lastname, email, password } = req.body;
+    let { firstname, lastname, email, password, role } = req.body;
 
     if (!firstname || !lastname || !email || !password)
         return res.status(400).json({
             message: "Please fill the required fields"
         });
+
+    // if (role != "student" || role != "teacher")
+    //     return res.status(400).json({
+    //         message: "Invalid role"
+    //     });
 
     const existingUser = await userRepo.findByEmail(email);
 
@@ -25,10 +30,11 @@ router.post("/register", async (req, res) => {
         firstname,
         lastname,
         email,
-        password
+        password,
+        role
     });
 
-    return res.status(201).json({ message: "Registratin successful" });
+    return res.status(201).json({ message: "Registration successful" });
 });
 
 router.post("/login", async (req, res) => {
@@ -54,6 +60,9 @@ router.post("/login", async (req, res) => {
             user_id: existingUser[0].user_id
         }
     })
-})
+});
+
+
+
 
 module.exports = router;
